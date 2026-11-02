@@ -1,0 +1,320 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>אנגלית על הלוח</title></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Secular+One&family=Varela+Round&display=swap">
+<style>
+/* Layout: a classroom chalkboard in a wooden frame; a map of 9 lessons, then one big question at a time. Single dark look by choice. */
+:root{
+  --board:#1d3b33; --board-2:#24483e; --wood:#7a5232; --wood-2:#5e3d24;
+  --chalk:#f2efe4; --chalk-dim:#b9c4bb;
+  --yellow:#f5d76e; --pink:#f3a5b6; --blue:#9cd2e3; --ok:#9be38f; --bad:#ff8f7a;
+  --f-display:"Secular One","Varela Round",system-ui,sans-serif;
+  --f-body:"Varela Round",system-ui,sans-serif;
+  --f-en:"Fredoka","Varela Round",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html{background:var(--wood-2)}
+body{background:var(--wood-2);color:var(--chalk);font-family:var(--f-body);font-size:17px;line-height:1.5;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.board{background:radial-gradient(ellipse at 20% 10%,rgba(255,255,255,.06),transparent 55%),radial-gradient(ellipse at 85% 90%,rgba(255,255,255,.04),transparent 50%),var(--board);
+  border:10px solid var(--wood);border-radius:16px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);padding:22px clamp(14px,4vw,32px) 26px;min-height:520px;position:relative;overflow:hidden}
+.ledge{height:14px;margin:0 24px;background:var(--wood);border-radius:0 0 8px 8px;box-shadow:0 4px 8px rgba(0,0,0,.3);display:flex;gap:10px;justify-content:center;align-items:center}
+.ledge i{display:block;width:34px;height:7px;border-radius:3px;background:var(--chalk)}
+.ledge i:nth-child(2){background:var(--yellow)}.ledge i:nth-child(3){background:var(--pink)}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.7rem,5vw,2.3rem);color:var(--yellow)}
+h2{font-size:1.5rem}
+.en{font-family:var(--f-en);font-weight:500;unicode-bidi:isolate;direction:ltr}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.chalkline{border:2.5px solid rgba(242,239,228,.8);border-radius:16px 20px 14px 22px/20px 14px 22px 16px}
+.top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+.total{font-size:1.05rem;color:var(--yellow);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hello{color:var(--chalk-dim);margin-top:2px}
+.hello .en{color:var(--chalk);font-size:1.15rem}
+.linkbtn{background:none;border:0;color:var(--blue);text-decoration:underline;padding:0 4px;font-size:.9rem}
+/* name card */
+.namecard{padding:18px;margin-bottom:20px;display:grid;gap:10px}
+.namecard p{margin:0}
+.namerow{display:flex;gap:10px;flex-wrap:wrap}
+.namerow input{flex:1 1 180px;min-width:0;background:rgba(0,0,0,.2);color:var(--chalk);font-family:var(--f-en);font-size:1.5rem;padding:8px 14px;border:2px solid var(--chalk-dim);border-radius:12px;direction:ltr;text-align:left}
+.btn{background:var(--yellow);color:#2a2410;border:0;border-radius:12px;padding:10px 20px;font-family:var(--f-display);font-size:1.1rem;box-shadow:0 3px 0 #b39a3e}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #b39a3e}
+.btn.ghost{background:transparent;color:var(--chalk);border:2px solid var(--chalk-dim);box-shadow:none}
+.msg{min-height:1.5em;font-size:.95rem}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+/* map */
+.map{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.stage{background:rgba(255,255,255,.035);text-align:right;padding:14px 14px 12px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:start;transition:background .15s,transform .15s}
+.stage:hover:not(:disabled){background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.stage:disabled{opacity:.42;cursor:not-allowed}
+.num{grid-row:span 3;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-en);font-weight:600;font-size:1.3rem;border:2.5px solid currentColor}
+.stage .t{font-family:var(--f-display);font-size:1.15rem;line-height:1.25}
+.stage .s{font-size:.88rem;color:var(--chalk-dim);line-height:1.35}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:4px}
+.lvl{font-size:.75rem;letter-spacing:.04em;padding:1px 8px;border-radius:99px;border:1.5px solid currentColor}
+.stars{color:var(--yellow);letter-spacing:2px;font-size:1.05rem}
+.stars .off{color:rgba(242,239,228,.22)}
+.c1{color:var(--ok)}.c2{color:var(--blue)}.c3{color:var(--pink)}.c4{color:var(--yellow)}
+.extra{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.extra p{margin:0;color:var(--chalk-dim);font-size:.92rem;flex:1 1 260px}
+/* game */
+.gbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.gbar h2{flex:1;font-size:1.25rem;min-width:0}
+.back{background:none;border:2px solid var(--chalk-dim);border-radius:10px;padding:4px 12px;font-size:.95rem}
+.prog{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;direction:rtl}
+.prog i{width:22px;height:8px;border-radius:4px;background:rgba(242,239,228,.18)}
+.prog i.ok{background:var(--ok)}.prog i.bad{background:var(--bad)}.prog i.now{background:var(--chalk)}
+.prompt{text-align:center;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.ask{margin:0;font-size:1.2rem;color:var(--chalk-dim)}
+.big{font-size:clamp(4rem,16vw,6.5rem);line-height:1.05;color:var(--chalk);text-shadow:0 0 1px var(--chalk)}
+.big.he{font-family:var(--f-body)}
+.emoji{font-size:clamp(3.4rem,12vw,4.6rem);line-height:1.1}
+.word{font-size:clamp(2.6rem,10vw,3.6rem);color:var(--yellow)}
+.heword{font-family:var(--f-display);font-size:2rem;color:var(--chalk)}
+.sentence{font-size:clamp(1.8rem,7vw,2.6rem);color:var(--yellow);line-height:1.3}
+.missing{font-size:clamp(2.6rem,11vw,3.8rem);letter-spacing:.12em;color:var(--chalk)}
+.missing b{display:inline-block;min-width:.8em;border-bottom:4px solid var(--yellow);color:var(--yellow)}
+.say{background:rgba(156,210,227,.15);border:2px solid var(--blue);color:var(--blue);border-radius:99px;padding:4px 16px;font-size:1rem;margin-top:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.opt{background:rgba(255,255,255,.04);padding:14px 10px;font-size:1.35rem;min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;transition:background .15s,border-color .15s}
+.opt:hover:not(:disabled){background:rgba(255,255,255,.1)}
+.opt .en{font-size:1.9rem}
+.opt.em{font-size:2.6rem}
+.opt .he-big{font-size:2.2rem}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:rgba(155,227,143,.18);color:var(--ok)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,143,122,.15);color:var(--bad);animation:shake .4s}
+.opt.dim{opacity:.45}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.feedback{min-height:64px;margin-top:16px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center;text-align:center}
+.praise{font-family:var(--f-display);font-size:1.6rem;color:var(--ok)}
+.explain{color:var(--chalk);font-size:1.1rem}
+.explain .en{color:var(--yellow);font-size:1.3rem}
+.typein{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.typein input{flex:0 1 300px;min-width:0;background:rgba(0,0,0,.2);color:var(--chalk);font-family:var(--f-en);font-size:1.8rem;padding:8px 14px;border:2px solid var(--chalk-dim);border-radius:12px;direction:ltr;text-align:center}
+/* end */
+.end{text-align:center;display:grid;gap:14px;justify-items:center;padding-top:20px}
+.end .bigstars{font-size:3.4rem;color:var(--yellow);letter-spacing:8px}
+.end .bigstars .off{color:rgba(242,239,228,.2)}
+.end p{margin:0;font-size:1.15rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.review{max-width:440px;color:var(--chalk-dim);font-size:.95rem}
+.review .en{color:var(--chalk)}
+/* flashcards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.card{background:rgba(255,255,255,.04);min-height:110px;display:grid;place-items:center;padding:10px;text-align:center}
+.card .en{font-size:1.8rem;color:var(--yellow)}
+.card.flip{background:rgba(155,227,143,.12)}
+.card .face{display:grid;gap:2px}
+.card .face span:first-child{font-size:2rem}
+.card .face span:last-child{font-family:var(--f-display);font-size:1.3rem}
+.hint{color:var(--chalk-dim);margin:0 0 14px}
+.dust{position:absolute;top:-20px;font-size:1.4rem;pointer-events:none;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(560px) rotate(200deg);opacity:0}}
+@media (max-width:440px){.board{border-width:6px;padding-top:16px}.opt{min-height:64px;font-size:1.2rem}.opt .en{font-size:1.6rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap" dir="rtl">
+  <div class="board" id="app"></div>
+  <div class="ledge" aria-hidden="true"><i></i><i></i><i></i></div>
+</div>
+
+<script>
+const LET=['A','B','N','D','G','E','T','I','P','H','S','M','C'];
+const SOUND={A:'אַ',B:'בּ',N:'נ',D:'ד',G:'ג',E:'אֶ',T:'ט',I:'אִ',P:'פּ',H:'ה',S:'ס',M:'מ',C:'ק'};
+const CONF={B:['D','P'],D:['B','P'],P:['B','D'],N:['M','H'],M:['N','H'],H:['N','M'],I:['T','E'],T:['I','E'],E:['A','I'],A:['E','G'],G:['C','D'],C:['G','S'],S:['C','E']};
+const W=[['play','לשחק','🧸'],['sing','לשיר','🎤'],['run','לרוץ','🏃'],['hen','תרנגולת','🐔'],['rabbit','ארנבת','🐰'],['friend','חבר','🤝'],['hand','כף יד','✋'],['horse','סוס','🐴'],['carrot','גזר','🥕'],['tall','גבוה','🦒'],['bag','תיק','🎒'],['ball','כדור','⚽'],['cow','פרה','🐄'],['leg','רגל','🦵'],['cold','קר','🥶'],['egg','ביצה','🥚'],['pen','עט','🖊️'],['bed','מיטה','🛏️'],['mouse','עכבר','🐭'],['sheep','כבשה','🐑'],['tree','עץ','🌳'],['big','גדול','🐘'],['hat','כובע','🎩']].map(([en,he,em])=>({en,he,em}));
+const SENT=[
+ ['I play ball.','אני משחקת בכדור',['אני שרה עם כדור','אני משחקת עם תיק','אני רצה עם כדור']],
+ ['The hen is big.','התרנגולת גדולה',['הפרה גדולה','התרנגולת גבוהה','העט גדול']],
+ ['The tree is tall.','העץ גבוה',['העץ גדול','הסוס גבוה','לעץ קר']],
+ ['A big egg.','ביצה גדולה',['רגל גדולה','ביצה קרה','כובע גדול']],
+ ['The mouse is in the bag.','העכבר בתוך התיק',['העכבר בתוך המיטה','הארנבת בתוך התיק','העט בתוך התיק']],
+ ['I sing and run.','אני שרה ורצה',['אני משחקת ורצה','אני שרה ומשחקת','החבר שלי שר']],
+ ['The sheep is cold.','לכבשה קר',['לפרה קר','הכבשה גדולה','לעכבר קר']],
+ ['My hand is big.','כף היד שלי גדולה',['הרגל שלי גדולה','כף היד שלי קרה','הכובע שלי גדול']],
+ ['The pen is on the bed.','העט על המיטה',['העט בתוך התיק','הכדור על המיטה','העט על העץ']],
+ ['The horse is tall.','הסוס גבוה',['הסוס גדול','הפרה גבוהה','העץ גבוה']],
+ ['A rabbit and a carrot.','ארנבת וגזר',['תרנגולת וגזר','ארנבת וביצה','עכבר וגזר']],
+ ['The cow and the hen.','הפרה והתרנגולת',['הסוס והתרנגולת','הפרה והכבשה','הפרה והעכבר']],
+ ['My friend has a hat.','לחבר שלי יש כובע',['לחבר שלי יש תיק','לי יש כובע','לחבר שלי יש כדור']]
+];
+const PRAISE=['מעולה!','כל הכבוד!','יפה מאוד!','מצוין!','אלופה!','Great!','Super!'];
+
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const deck=arr=>{let d=[];return()=>{if(!d.length)d=shuffle(arr);return d.pop()}};
+const en=t=>`<span class="en" dir="ltr">${t}</span>`;
+const pair=L=>en(L+L.toLowerCase());
+const canSpeak='speechSynthesis' in window;
+function say(t){if(!canSpeak)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+function letterOpts(c){const pool=[...(CONF[c]||[]),...shuffle(LET)].filter((x,i,a)=>x!==c&&a.indexOf(x)===i);return shuffle([c,...pool.slice(0,3)])}
+function sim(a,b){let s=0;for(const ch of new Set(a))if(b.includes(ch))s++;if(a.length===b.length)s+=2;if(a[0]===b[0])s++;if(a.at(-1)===b.at(-1))s++;return s+Math.random()*1.5}
+const others=w=>shuffle(W.filter(x=>x!==w)).slice(0,3);
+const lookalikes=w=>W.filter(x=>x!==w).sort((x,y)=>sim(w.en,y.en)-sim(w.en,x.en)).slice(0,3);
+const sayBtn=t=>canSpeak?`<button class="say" data-say="${t}" aria-label="השמעה">🔊 שמעי</button>`:'';
+
+/* ---------- question generators, from easy to hard ---------- */
+const startsKnown=W.filter(w=>LET.includes(w.en[0].toUpperCase()));
+const G={
+ caseQ(L){const up=Math.random()<.5;
+  return{prompt:`<p class="ask">${up?'מה האות הקטנה של':'מה האות הגדולה של'}</p><div class="big en">${up?L:L.toLowerCase()}</div>`,
+   opts:letterOpts(L).map(x=>({html:en(up?x.toLowerCase():x),ok:x===L})),explain:`${en(L)} ו-${en(L.toLowerCase())} הן אותה אות`}},
+ soundQ(L){if(Math.random()<.5)return{prompt:`<p class="ask">איזו אות עושה את הצליל</p><div class="big he">${SOUND[L]}</div>`,
+   opts:letterOpts(L).map(x=>({html:pair(x),ok:x===L})),explain:`האות ${pair(L)} עושה את הצליל ${SOUND[L]}`};
+  return{prompt:`<p class="ask">איזה צליל עושה האות</p><div class="big en">${L}${L.toLowerCase()}</div>`,
+   opts:letterOpts(L).map(x=>({html:`<span class="he-big">${SOUND[x]}</span>`,ok:x===L})),explain:`האות ${pair(L)} עושה את הצליל ${SOUND[L]}`}},
+ firstQ(w){const L=w.en[0].toUpperCase();
+  return{prompt:`<div class="emoji">${w.em}</div><div class="heword">${w.he}</div>${sayBtn(w.en)}<p class="ask">באיזו אות מתחילה המילה באנגלית?</p>`,speak:w.en,
+   opts:letterOpts(L).map(x=>({html:pair(x),ok:x===L})),explain:`${en(w.en)} מתחילה באות ${pair(L)}`}},
+ pictureQ(w){return{prompt:`<p class="ask">איזו תמונה מתאימה למילה?</p><div class="word en">${w.en}</div>${sayBtn(w.en)}`,speak:w.en,
+   cls:'em',opts:shuffle([w,...others(w)]).map(x=>({html:x.em,ok:x===w})),explain:`${en(w.en)} = ${w.he} ${w.em}`}},
+ meaningQ(w){return{prompt:`<p class="ask">מה הפירוש של המילה?</p><div class="word en">${w.en}</div>${sayBtn(w.en)}`,speak:w.en,
+   opts:shuffle([w,...others(w)]).map(x=>({html:x.he,ok:x===w})),explain:`${en(w.en)} = ${w.he}`}},
+ toEnglishQ(w){return{prompt:`<p class="ask">איך אומרים באנגלית?</p><div class="heword" style="font-size:2.6rem">${w.he}</div>`,
+   opts:shuffle([w,...lookalikes(w)]).map(x=>({html:en(x.en),ok:x===w})),explain:`${w.he} = ${en(w.en)}`,after:w.en}},
+ missingQ(w){const idx=pick([...w.en].map((c,i)=>LET.includes(c.toUpperCase())?i:-1).filter(i=>i>=0));const L=w.en[idx].toUpperCase();
+  const shown=[...w.en].map((c,i)=>i===idx?'<b>_</b>':c).join('');
+  return{prompt:`<div class="emoji">${w.em}</div><div class="heword" style="font-size:1.5rem">${w.he}</div><p class="ask">איזו אות חסרה?</p><div class="missing en">${shown}</div>`,
+   opts:letterOpts(L).map(x=>({html:en(x.toLowerCase()),ok:x===L})),explain:`המילה היא ${en(w.en)}`,after:w.en}},
+ sentenceQ(s){return{prompt:`<p class="ask">קראי את המשפט. מה הוא אומר?</p><div class="sentence en">${s[0]}</div>${sayBtn(s[0])}`,
+   opts:shuffle([s[1],...s[2]]).map(x=>({html:x,ok:x===s[1]})),explain:`${en(s[0])}<br>${s[1]}`,after:s[0]}},
+ classQ(){const c='4/c';return{prompt:`<p class="ask">איך כותבים באנגלית את הכיתה שלך?</p><div class="heword" style="font-size:2.6rem">כיתה ד׳</div>`,
+   opts:shuffle(['4/c','4/ג','c/4','4/e']).map(x=>({html:en(x),ok:x===c})),explain:`כותבים ${en('4/c')}`}},
+ nameQ(){return{type:'name',prompt:`<p class="ask">ובסוף, כמו במבחן:</p><div class="heword">כתבי את השם שלך באנגלית</div><p class="ask" style="font-size:1rem">זכרי: שם מתחיל באות גדולה</p>`}}
+};
+
+const STAGES=[
+ {t:'גדולה וקטנה',s:'מתאימים אות גדולה לאות קטנה',lvl:'קל',c:'c1',n:8,mk(){const d=deck(LET);return()=>G.caseQ(d())}},
+ {t:'הצלילים של האותיות',s:'איזו אות עושה איזה צליל',lvl:'קל',c:'c1',n:8,mk(){const d=deck(LET);return()=>G.soundQ(d())}},
+ {t:'האות הראשונה',s:'שומעים מילה ומוצאים במה היא מתחילה',lvl:'קל',c:'c1',n:8,mk(){const d=deck(startsKnown);return()=>G.firstQ(d())}},
+ {t:'מילה ותמונה',s:'קוראים מילה באנגלית ובוחרים תמונה',lvl:'בינוני',c:'c2',n:8,mk(){const d=deck(W);return()=>G.pictureQ(d())}},
+ {t:'מה הפירוש?',s:'מילה באנגלית, פירוש בעברית, בלי תמונות',lvl:'בינוני',c:'c2',n:10,mk(){const d=deck(W);return()=>G.meaningQ(d())}},
+ {t:'מעברית לאנגלית',s:'המילים באנגלית דומות זו לזו. זהירות!',lvl:'בינוני',c:'c2',n:10,mk(){const d=deck(W);return()=>G.toEnglishQ(d())}},
+ {t:'האות החסרה',s:'משלימים את האות שחסרה במילה',lvl:'קשה',c:'c3',n:10,mk(){const d=deck(W);return()=>G.missingQ(d())}},
+ {t:'קוראים משפט',s:'קוראים משפט קצר ומבינים אותו',lvl:'קשה',c:'c3',n:8,mk(){const d=deck(SENT);return()=>G.sentenceQ(d())}},
+ {t:'אתגר האלופה',s:'הכל ביחד, כמו במבחן האמיתי',lvl:'אלופה',c:'c4',n:12,mk(){
+   const L=deck(LET),Wd=deck(W),S=deck(SENT),F=deck(startsKnown);
+   const pool=[()=>G.soundQ(L()),()=>G.firstQ(F()),()=>G.meaningQ(Wd()),()=>G.meaningQ(Wd()),()=>G.toEnglishQ(Wd()),()=>G.missingQ(Wd()),()=>G.sentenceQ(S())];
+   const plan=[...shuffle([...Array(10)].map((_,i)=>pool[i%pool.length]).concat([()=>G.classQ()])),()=>G.nameQ()];
+   let i=0;return()=>plan[i++]()}}
+];
+
+/* ---------- saved progress (this browser only) ---------- */
+let save={name:'',stars:{}};
+try{const s=JSON.parse(localStorage.getItem('eng-board')||'null');if(s)save=Object.assign(save,s)}catch(e){}
+const store=()=>{try{localStorage.setItem('eng-board',JSON.stringify(save))}catch(e){}};
+const unlocked=i=>i===0||(save.stars[i-1]||0)>0;
+const starStr=(n,max=3)=>'★'.repeat(n)+`<span class="off">${'★'.repeat(max-n)}</span>`;
+function checkName(v){v=v.trim();
+  if(!v)return'כתבי את השם שלך';
+  if(/[֐-׿]/.test(v))return'באנגלית בבקשה, לא בעברית';
+  if(!/^[A-Za-z]+([ -][A-Za-z]+)*$/.test(v))return'רק אותיות באנגלית';
+  if(v[0]!==v[0].toUpperCase())return`שם מתחיל באות גדולה: ${v[0].toUpperCase()} ולא ${v[0]}`;
+  if(/[A-Z]/.test(v.slice(1).replace(/[ -][A-Z]/g,'')))return'אחרי האות הראשונה כותבים באותיות קטנות';
+  return'';}
+
+const app=document.getElementById('app');
+app.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.dataset.say)});
+
+/* ---------- map ---------- */
+function showMap(editName){
+  const total=Object.values(save.stars).reduce((a,b)=>a+b,0);
+  const needName=!save.name||editName;
+  app.innerHTML=`
+   <div class="top"><div><h1>אנגלית על הלוח</h1>
+     ${save.name&&!editName?`<div class="hello">Hi, ${en(save.name)}! <button class="linkbtn" id="edit">לשנות שם</button></div>`:''}</div>
+     <div class="total">★ ${total} / ${STAGES.length*3}</div></div>
+   ${needName?`<div class="namecard chalkline"><p><b>לפני שמתחילים:</b> במבחן צריך לכתוב את השם באנגלית. נסי כאן!</p>
+     <form class="namerow" id="nf"><input id="nameIn" autocomplete="off" spellcheck="false" placeholder="Name" value="${save.name}" aria-label="השם שלך באנגלית"><button class="btn">שמירה</button></form>
+     <div class="msg" id="nmsg"></div></div>`:''}
+   <div class="map">${STAGES.map((s,i)=>`
+     <button class="stage chalkline ${s.c}" data-st="${i}" ${unlocked(i)?'':'disabled'}>
+       <span class="num">${i+1}</span><span class="t">${s.t}</span><span class="s">${s.s}</span>
+       <span class="meta"><span class="lvl">${s.lvl}</span><span class="stars">${unlocked(i)?starStr(save.stars[i]||0):'🔒'}</span></span>
+     </button>`).join('')}</div>
+   <div class="extra"><p>כל שלב נפתח אחרי שעוברים את הקודם. המורה ממליצה לתרגל גם בעל פה: ההורה אומר מילה באנגלית והילדה אומרת את הפירוש.</p>
+     <button class="btn ghost" id="fc">כרטיסיות לתרגול בעל פה</button></div>`;
+  app.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>startStage(+b.dataset.st));
+  document.getElementById('fc').onclick=showCards;
+  const ed=document.getElementById('edit');if(ed)ed.onclick=()=>showMap(true);
+  const nf=document.getElementById('nf');
+  if(nf)nf.onsubmit=e=>{e.preventDefault();const v=document.getElementById('nameIn').value.trim();const err=checkName(v);const m=document.getElementById('nmsg');
+    if(err){m.className='msg bad';m.textContent=err;return}
+    save.name=v;store();showMap();};
+}
+
+/* ---------- playing a stage ---------- */
+let run;
+function startStage(i){const s=STAGES[i];run={i,s,gen:s.mk(),n:s.n,k:0,res:[],miss:[]};nextQ()}
+function bar(){return`<div class="gbar"><button class="back" id="back">→ למפה</button><h2>${run.i+1}. ${run.s.t}</h2></div>
+  <div class="prog">${[...Array(run.n)].map((_,j)=>`<i class="${run.res[j]===true?'ok':run.res[j]===false?'bad':j===run.k?'now':''}"></i>`).join('')}</div>`}
+function nextQ(){
+  if(run.k>=run.n)return finish();
+  const q=run.gen();run.q=q;
+  app.innerHTML=bar()+`<div class="prompt">${q.prompt}</div>`+
+   (q.type==='name'?`<form class="typein" id="tf"><input id="tin" autocomplete="off" spellcheck="false" placeholder="Name" aria-label="השם שלך באנגלית"><button class="btn">בדיקה</button></form>`
+    :`<div class="opts">${q.opts.map((o,j)=>`<button class="opt chalkline ${q.cls||''}" data-j="${j}">${o.html}</button>`).join('')}</div>`)+
+   `<div class="feedback" id="fb" aria-live="polite"></div>`;
+  document.getElementById('back').onclick=()=>{if(canSpeak)speechSynthesis.cancel();showMap()};
+  if(q.speak)setTimeout(()=>say(q.speak),250);
+  if(q.type==='name'){const f=document.getElementById('tf'),inp=document.getElementById('tin');inp.focus();
+    f.onsubmit=e=>{e.preventDefault();const err=checkName(inp.value);const fb=document.getElementById('fb');
+      if(err){fb.innerHTML=`<span class="explain" style="color:var(--bad)">${err}. נסי שוב!</span>`;if(!run.triedName){run.triedName=1;run.miss.push('לכתוב את השם באנגלית עם אות גדולה בהתחלה')}return}
+      if(!run.triedName)save.name=save.name||inp.value.trim();
+      answer(!run.triedName,null)};return}
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const o=q.opts[+b.dataset.j];answer(o.ok,b)});
+}
+function answer(ok,btn){
+  const q=run.q,fb=document.getElementById('fb');
+  app.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(q.opts[j].ok)b.classList.add('right');else if(b!==btn)b.classList.add('dim')});
+  run.res[run.k]=ok;
+  if(ok){fb.innerHTML=`<span class="praise">${pick(PRAISE)}</span>`;if(q.after)say(q.after);run.k++;setTimeout(nextQ,1100);return}
+  if(btn)btn.classList.add('wrong');
+  if(q.explain)run.miss.push(q.explain);
+  fb.innerHTML=`<span class="explain">לא נורא! ${q.explain||''}</span><button class="btn" id="go">הלאה</button>`;
+  if(q.after)say(q.after);
+  const go=document.getElementById('go');go.focus();go.onclick=()=>{run.k++;nextQ()};
+}
+function finish(){
+  const good=run.res.filter(Boolean).length,bad=run.n-good,pass=good>=Math.ceil(run.n*.75);
+  const st=!pass?0:bad===0?3:bad===1?2:1;
+  if(st>(save.stars[run.i]||0)){save.stars[run.i]=st;store()}
+  const last=run.i===STAGES.length-1,nextOpen=pass&&!last;
+  app.innerHTML=`<div class="end">
+    <div class="bigstars">${starStr(st)}</div>
+    <h2>${pass?(st===3?'מושלם! בלי אף טעות':'עברת את השלב!'):'כמעט! עוד קצת תרגול'}</h2>
+    <p>${good} תשובות נכונות מתוך ${run.n}${pass?'':` (צריך ${Math.ceil(run.n*.75)} כדי לעבור)`}</p>
+    ${last&&pass?`<p style="color:var(--yellow)">סיימת את כל השלבים. את מוכנה למבחן${save.name?', '+en(save.name):''}!</p>`:''}
+    ${run.miss.length?`<div class="review"><b>כדאי לחזור על:</b><br>${run.miss.slice(0,5).join('<br>')}</div>`:''}
+    <div class="row">${nextOpen?`<button class="btn" id="nx">לשלב הבא</button>`:''}
+      <button class="btn ${nextOpen?'ghost':''}" id="again">לשחק שוב</button><button class="btn ghost" id="map">למפה</button></div></div>`;
+  if(nextOpen)document.getElementById('nx').onclick=()=>startStage(run.i+1);
+  document.getElementById('again').onclick=()=>startStage(run.i);
+  document.getElementById('map').onclick=()=>showMap();
+  if(st>=2)dust(st===3?36:18);
+}
+function dust(n){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const cols=['var(--yellow)','var(--pink)','var(--blue)','var(--ok)','var(--chalk)'];
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.className='dust';s.textContent='★';
+    s.style.left=Math.random()*100+'%';s.style.color=pick(cols);s.style.animationDelay=Math.random()*.6+'s';
+    app.appendChild(s);setTimeout(()=>s.remove(),2600)}}
+
+/* ---------- flashcards for oral practice ---------- */
+function showCards(){
+  app.innerHTML=`<div class="gbar"><button class="back" id="back">→ למפה</button><h2>כרטיסיות</h2><button class="back" id="mix">ערבוב</button></div>
+   <p class="hint">קוראים את המילה באנגלית ואומרים בקול מה הפירוש. לוחצים על הכרטיס כדי לבדוק.</p>
+   <div class="cards" id="cards"></div>`;
+  const draw=list=>{document.getElementById('cards').innerHTML=list.map(w=>`<button class="card chalkline" data-w="${w.en}"><span class="en">${w.en}</span></button>`).join('');
+    document.querySelectorAll('.card').forEach(c=>c.onclick=()=>{const w=W.find(x=>x.en===c.dataset.w);const f=c.classList.toggle('flip');
+      c.innerHTML=f?`<span class="face"><span>${w.em}</span><span>${w.he}</span></span>`:`<span class="en">${w.en}</span>`;if(!f)say(w.en)})};
+  draw(W);
+  document.getElementById('back').onclick=()=>showMap();
+  document.getElementById('mix').onclick=()=>draw(shuffle(W));
+}
+showMap();
+</script>
+
+</body></html>
